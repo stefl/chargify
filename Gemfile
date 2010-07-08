@@ -1,8 +1,8 @@
 source 'http://rubygems.org'
 
 group :runtime do
-  gem 'httparty', '~> 0.5.2'
-  gem 'hashie',   '~> 0.1.3'
+  gem 'httparty', '~> 0.6.1'
+  gem 'hashie',   '~> 0.1.8'
   gem 'json'
 end
 

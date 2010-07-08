@@ -7,56 +7,7 @@ describe Chargify do
       @client = Chargify::Client.new(:api_key => 'OU812', :subdomain => 'pengwynn')
     end
 
-    it "should return a list of customers" do
-      stub_get "https://OU812:x@pengwynn.chargify.com/customers.json", "customers.json"
-      customers = @client.list_customers
-      customers.size.should == 1
-      customers.first.reference.should == 'bradleyjoyce'
-      customers.first.organization.should == 'Squeejee'
-    end
 
-    context "when finding customers" do
-      it "should be able to be found by a <reference_id>" do
-        stub_get "https://OU812:x@pengwynn.chargify.com/customers/lookup.json?reference=bradleyjoyce", "customer.json"
-        customer = @client.customer("bradleyjoyce")
-        customer.success?.should == true
-      end
-
-      it "should be able to be found by a <chargify_id>" do
-        stub_get "https://OU812:x@pengwynn.chargify.com/customers/16.json", "customer.json"
-        customer = @client.customer_by_id(16)
-        customer.success?.should == true
-      end
-
-      it "should return an empty Hash with success? set to false" do
-        stub_get "https://OU812:x@pengwynn.chargify.com/customers/16.json", "", 404
-        customer = @client.customer_by_id(16)
-        customer.success?.should == false
-      end
-    end
-
-    it "should create a new customer" do
-      stub_post "https://OU812:x@pengwynn.chargify.com/customers.json", "new_customer.json"
-      info = {
-        :first_name   => "Wynn",
-        :last_name    => "Netherland",
-        :email        => "wynn@example.com"
-      }
-      customer = @client.create_customer(info)
-      customer.first_name.should == "Wynn"
-    end
-
-    it "should update a customer" do
-      stub_put "https://OU812:x@pengwynn.chargify.com/customers/16.json", "new_customer.json"
-      info = {
-        :id           => 16,
-        :first_name   => "Wynn",
-        :last_name    => "Netherland",
-        :email        => "wynn@example.com"
-      }
-      customer = @client.update_customer(info)
-      customer.first_name.should == "Wynn"
-    end
 
     # Depends on Chargify:
     # should_eventually "delete a customer" do
