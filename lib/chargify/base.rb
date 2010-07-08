@@ -9,23 +9,31 @@ module Chargify
     class << self
 
       def api_request(type, path, options={})
+        self.base_uri "https://#{Chargify::Config.subdomain}.chargify.com"
+        self.basic_auth Chargify::Config.api_key, 'x'
+
+        # This is to allow bang methods
+        raise_errors = options.delete(:raise_errors)
+
         begin
           response = self.send(type.to_s, path, options)
         rescue SocketError
           raise(Chargify::Error::ConnectionFailed.new, "Failed to connect to payment gateway.")
         end
 
-        case response.code.to_i
-        when 401
-          raise(Chargify::Error::AccessDenied.new(response), response.body)
-        when 403
-          raise(Chargify::Error::Forbidden.new(response), response.body)
-        when 422
-          raise(Chargify::Error::BadRequest.new(response), response.body)
-        when 404
-          raise(Chargify::Error::NotFound.new(response), response.body)
-        when 504
-          raise(Chargify::Error::GatewayTimeout.new(response), response.body)
+        if raise_errors
+          case response.code.to_i
+          when 401
+            raise(Chargify::Error::AccessDenied.new(response), response.body)
+          when 403
+            raise(Chargify::Error::Forbidden.new(response), response.body)
+          when 422
+            raise(Chargify::Error::BadRequest.new(response), response.body)
+          when 404
+            raise(Chargify::Error::NotFound.new(response), response.body)
+          when 504
+            raise(Chargify::Error::GatewayTimeout.new(response), response.body)
+          end
         end
 
         response
@@ -39,8 +47,7 @@ module Chargify
       Chargify::Config.api_key = options[:api_key] if options[:api_key]
       Chargify::Config.subdomain = options[:subdomain] if options[:subdomain]
 
-      self.class.base_uri "https://#{@subdomain}.chargify.com"
-      self.class.basic_auth @api_key, 'x'
+
 
       @errors = []
       self.attributes = attrs

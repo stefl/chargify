@@ -18,6 +18,11 @@ module Chargify
         Hashie::Mash.new(response || {}).update(:success? => success)
       end
 
+      # def find!(id)
+        # request = api_request(:get, "/customers/#{id}.json", :raise_errors => true)
+        # response = Hashie::Mash.new(request).customer
+      # end
+
       def lookup(reference_id)
         request = api_request(:get, "/customers/lookup.json?reference=#{reference_id}")
         success = request.code == 200
