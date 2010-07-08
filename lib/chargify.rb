@@ -9,6 +9,7 @@ module Chargify
 
   autoload :Client, 'chargify/client'
   autoload :Config, 'chargify/config'
+  autoload :Parser, 'chargify/parser'
 
   class UnexpectedResponseError < RuntimeError; end
 
