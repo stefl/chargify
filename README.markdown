@@ -10,10 +10,18 @@ Ruby wrapper for the chargify.com SAAS and billing API
 
 ### Create, cancel, then reactivate subscription
     attributes   = { :product_handle => 'basic' ... }
-    @client      = Chargify::Client.new('InDhcXAAAAAg7juDD', 'xxx-test')
+    @client      = Chargify::Client.new(:api_key => 'InDhcXAAAAAg7juDD', :subdomain => 'xxx-test')
     subscription = @client.create_subscription(attributes)
     @client.cancel_subscription(subscription[:id], "Canceled due to bad customer service.") 
     @client.reactivate_subscription(subscription[:id]) #Made him an offer he couldn't refuse!
+
+## Rails Usage
+
+### config/initializers/chargify.rb
+    Chargify::Config.setup do |config|
+      config[:subdomain] = 'xxx-test'
+      config[:api_key]   = 'InDhcXAAAAAg7juDD'
+    end
 
 ## Note on Patches/Pull Requests
  
