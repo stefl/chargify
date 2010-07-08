@@ -21,13 +21,12 @@ module Chargify
     attr_reader :api_key, :subdomain
 
     # Your API key can be generated on the settings screen.
-    def initialize(api_key, subdomain)
-      @api_key = api_key
-      @subdomain = subdomain
+    def initialize(options={})
+      @api_key = options[:api_key] ? options[:api_key] : Chargify::Config.api_key
+      @subdomain = options[:subdomain] ? options[:subdomain] : Chargify::Config.subdomain
 
       self.class.base_uri "https://#{@subdomain}.chargify.com"
       self.class.basic_auth @api_key, 'x'
-
     end
 
     # options: page
