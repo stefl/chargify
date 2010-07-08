@@ -3,6 +3,7 @@ module Chargify
     include HTTParty
 
     parser Chargify::Parser
+    format :json
     headers 'Content-Type' => 'application/json'
     headers 'User-Agent' => 'Chargify Ruby Client'
 

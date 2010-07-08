@@ -16,15 +16,6 @@ module Chargify
       self.class.basic_auth @api_key, 'x'
     end
 
-
-
-    def customer_subscriptions(chargify_id)
-      subscriptions = get("/customers/#{chargify_id}/subscriptions.json")
-      subscriptions.map{|s| Hashie::Mash.new s['subscription']}
-    end
-
-
-
     def migrate_subscription(sub_id, product_id)
       raw_response = post("/subscriptions/#{sub_id}/migrations.json", :body => {:product_id => product_id })
       success      = true if raw_response.code == 200

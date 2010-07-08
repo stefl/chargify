@@ -97,4 +97,15 @@ describe Chargify::Customer do
 
   end
 
+  describe '.subscriptions' do
+
+    it "should return a list of customer subscriptions" do
+      stub_get "https://OU812:x@pengwynn.chargify.com/customers/16/subscriptions.json", "subscriptions.json"
+      subscriptions = Chargify::Customer.subscriptions(16)
+      subscriptions.size.should == 1
+      subscriptions.first.customer.reference.should == "bradleyjoyce"
+    end
+
+  end
+
 end

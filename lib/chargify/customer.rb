@@ -61,6 +61,11 @@ module Chargify
         response
       end
 
+      def subscriptions(id)
+        subscriptions = api_request(:get, "/customers/#{id}/subscriptions.json")
+        subscriptions.map{|s| Hashie::Mash.new s['subscription']}
+      end
+
     end
 
   end

@@ -8,12 +8,6 @@ describe Chargify do
     end
 
 
-    it "should return a list of customer subscriptions" do
-      stub_get "https://OU812:x@pengwynn.chargify.com/customers/16/subscriptions.json", "subscriptions.json"
-      subscriptions = @client.customer_subscriptions(16)
-      subscriptions.size.should == 1
-      subscriptions.first.customer.reference.should == "bradleyjoyce"
-    end
 
     context "for metered subscriptions" do
 
