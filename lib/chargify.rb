@@ -2,12 +2,12 @@ require 'hashie'
 require 'httparty'
 require 'json'
 
-directory = File.expand_path(File.dirname(__FILE__))
-
 Hash.send :include, Hashie::HashExtensions
-
-require File.join(directory, 'chargify', 'client')
 
 module Chargify
   VERSION = "0.2.6".freeze
+
+  autoload :Base,   'chargify/base'
+  autoload :Client, 'chargify/client'
+  autoload :Config, 'chargify/config'
 end
