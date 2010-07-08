@@ -4,7 +4,7 @@ describe Chargify do
   context "Chargify API client" do
 
     before do
-      @client = Chargify::Client.new('OU812', 'pengwynn')
+      @client = Chargify::Client.new(:api_key => 'OU812', :subdomain => 'pengwynn')
     end
 
     it "should return a list of customers" do
