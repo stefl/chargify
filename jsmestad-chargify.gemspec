@@ -23,7 +23,7 @@ Gem::Specification.new do |s|
      "Rakefile",
      "VERSION",
      "changelog.md",
-     "chargify.gemspec",
+     "jsmestad-chargify.gemspec",
      "lib/chargify.rb",
      "lib/chargify/base.rb",
      "lib/chargify/config.rb",
