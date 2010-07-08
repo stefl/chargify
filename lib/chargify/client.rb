@@ -1,7 +1,7 @@
 module Chargify
   class UnexpectedResponseError < RuntimeError
   end
-  
+
   class Parser < HTTParty::Parser
     def parse
       begin
@@ -11,68 +11,68 @@ module Chargify
       end
     end
   end
-  
+
   class Client
     include HTTParty
-    
+
     parser Chargify::Parser
-    headers 'Content-Type' => 'application/json' 
-    
+    headers 'Content-Type' => 'application/json'
+
     attr_reader :api_key, :subdomain
-    
+
     # Your API key can be generated on the settings screen.
     def initialize(api_key, subdomain)
       @api_key = api_key
       @subdomain = subdomain
-      
+
       self.class.base_uri "https://#{@subdomain}.chargify.com"
       self.class.basic_auth @api_key, 'x'
-      
+
     end
-    
+
     # options: page
     def list_customers(options={})
       customers = get("/customers.json", :query => options)
       customers.map{|c| Hashie::Mash.new c['customer']}
     end
-    
+
     def customer_by_id(chargify_id)
       request = get("/customers/#{chargify_id}.json")
       success = request.code == 200
       response = Hashie::Mash.new(request).customer if success
       Hashie::Mash.new(response || {}).update(:success? => success)
     end
-    
+
     def customer_by_reference(reference_id)
       request = get("/customers/lookup.json?reference=#{reference_id}")
       success = request.code == 200
       response = Hashie::Mash.new(request).customer if success
       Hashie::Mash.new(response || {}).update(:success? => success)
     end
-    
+
     alias customer customer_by_reference
-    
-    
+
+
     #
     # * first_name (Required)
     # * last_name (Required)
     # * email (Required)
     # * organization (Optional) Company/Organization name
     # * reference (Optional, but encouraged) The unique identifier used within your own application for this customer
-    # 
+    #
     def create_customer(info={})
       response = Hashie::Mash.new(post("/customers.json", :body => {:customer => info}))
       return response.customer if response.customer
       response
     end
-    
+
     #
     # * first_name (Required)
     # * last_name (Required)
     # * email (Required)
     # * organization (Optional) Company/Organization name
     # * reference (Optional, but encouraged) The unique identifier used within your own application for this customer
-    # 
+    #
     def update_customer(info={})
       info.stringify_keys!
       chargify_id = info.delete('id')
@@ -80,18 +80,18 @@ module Chargify
       return response.customer unless response.customer.to_a.empty?
       response
     end
-    
+
     def customer_subscriptions(chargify_id)
       subscriptions = get("/customers/#{chargify_id}/subscriptions.json")
       subscriptions.map{|s| Hashie::Mash.new s['subscription']}
     end
-    
+
     def subscription(subscription_id)
       raw_response = get("/subscriptions/#{subscription_id}.json")
       return nil if raw_response.code != 200
       Hashie::Mash.new(raw_response).subscription
     end
-    
+
     # Returns all elements outputted by Chargify plus:
     # response.success? -> true if response code is 201, false otherwise
     def create_subscription(subscription_attributes={})
@@ -125,7 +125,7 @@ module Chargify
       response     = Hashie::Mash.new(raw_response) rescue Hashie::Mash.new
       (response.subscription || response).update(:success? => reactivated)
     end
-      
+
     def charge_subscription(sub_id, subscription_attributes={})
       raw_response = post("/subscriptions/#{sub_id}/charges.json", :body => { :charge => subscription_attributes })
       success      = raw_response.code == 201
@@ -136,7 +136,7 @@ module Chargify
       response = Hashie::Mash.new(raw_response)
       (response.charge || response).update(:success? => success)
     end
-    
+
     def migrate_subscription(sub_id, product_id)
       raw_response = post("/subscriptions/#{sub_id}/migrations.json", :body => {:product_id => product_id })
       success      = true if raw_response.code == 200
@@ -148,22 +148,22 @@ module Chargify
       products = get("/products.json")
       products.map{|p| Hashie::Mash.new p['product']}
     end
-    
+
     def product(product_id)
       Hashie::Mash.new( get("/products/#{product_id}.json")).product
     end
-    
+
     def product_by_handle(handle)
       Hashie::Mash.new(get("/products/handle/#{handle}.json")).product
     end
-    
+
     def list_subscription_usage(subscription_id, component_id)
       raw_response = get("/subscriptions/#{subscription_id}/components/#{component_id}/usages.json")
       success      = raw_response.code == 200
       response     = Hashie::Mash.new(raw_response)
       response.update(:success? => success)
     end
-    
+
     def subscription_transactions(sub_id, options={})
       transactions = get("/subscriptions/#{sub_id}/transactions.json", :query => options)
       transactions.map{|t| Hashie::Mash.new t['transaction']}
@@ -178,42 +178,40 @@ module Chargify
       components = get("/subscriptions/#{subscription_id}/components.json")
       components.map{|c| Hashie::Mash.new c['component']}
     end
-    
+
     def subscription_component(subscription_id, component_id)
       response = get("/subscriptions/#{subscription_id}/components/#{component_id}.json")
       Hashie::Mash.new(response).component
     end
-    
+
     def update_subscription_component_allocated_quantity(subscription_id, component_id, quantity)
       response = put("/subscriptions/#{subscription_id}/components/#{component_id}.json", :body => {:component => {:allocated_quantity => quantity}})
       response[:success?] = response.code == 200
       Hashie::Mash.new(response)
     end
-      
-      
-      
+
     private
-    
+
       def post(path, options={})
         jsonify_body!(options)
         self.class.post(path, options)
       end
-    
+
       def put(path, options={})
         jsonify_body!(options)
         self.class.put(path, options)
       end
-    
+
       def delete(path, options={})
         jsonify_body!(options)
         self.class.delete(path, options)
       end
-    
+
       def get(path, options={})
         jsonify_body!(options)
         self.class.get(path, options)
       end
-    
+
       def jsonify_body!(options)
         options[:body] = options[:body].to_json if options[:body]
 
