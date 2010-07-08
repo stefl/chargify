@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.3.0.pre July 08, 2010
+* Complete API Rewrite, please view wiki for API documentation
+
 ## 0.2.6 May 27, 2010
 * Fix #charge_subscription to submit it's body as json [@will](http://github.com/will) and [@ignat](http://github.com/ignat)
 * API coverage for quantity components [@will](http://github.com/will)
