@@ -52,6 +52,41 @@ module Chargify
         (response.charge || response).update(:success? => success)
       end
 
+      def migrate(sub_id, product_id)
+        result = api_request(:post, "/subscriptions/#{sub_id}/migrations.json", :body => {:product_id => product_id })
+        success = true if result.code == 200
+        response = Hashie::Mash.new(result)
+        (response.subscription || {}).update(:success? => success)
+      end
+
+      def transactions(sub_id, options={})
+        result = api_request(:get, "/subscriptions/#{sub_id}/transactions.json", :query => options)
+        result.map{|t| Hashie::Mash.new t['transaction']}
+      end
+
+      def components(subscription_id)
+        result = api_request(:get, "/subscriptions/#{subscription_id}/components.json")
+        result.map{|c| Hashie::Mash.new c['component']}
+      end
+
+      def find_component(subscription_id, component_id)
+        result = get("/subscriptions/#{subscription_id}/components/#{component_id}.json")
+        Hashie::Mash.new(result).component
+      end
+
+      def update_component(subscription_id, component_id, quantity)
+        result = api_request(:put, "/subscriptions/#{subscription_id}/components/#{component_id}.json", :body => {:component => {:allocated_quantity => quantity}})
+        result[:success?] = result.code == 200
+        Hashie::Mash.new(result)
+      end
+
+      def component_usage(subscription_id, component_id)
+        result = api_request(:get, "/subscriptions/#{subscription_id}/components/#{component_id}/usages.json")
+        success = result.code == 200
+        response = Hashie::Mash.new(result)
+        response.update(:success? => success)
+      end
+
     end
 
   end

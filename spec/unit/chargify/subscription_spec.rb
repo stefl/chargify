@@ -244,6 +244,60 @@ describe Chargify::Subscription do
         subscription.success?.should == false
       end
 
+  end
+
+  describe '.migrate' do
+
+    it "should migrate a subscription from one product to another" do
+      stub_post "https://OU812:x@pengwynn.chargify.com/subscriptions/123/migrations.json", "migrate_subscription.json"
+
+      subscription = Chargify::Subscription.migrate(123, 354);
+      subscription.success?.should == true
+      subscription.product.id.should == 354
+    end
+
+  end
+
+  describe '.components' do
+
+    it "should list components" do
+      stub_get "https://OU812:x@pengwynn.chargify.com/subscriptions/123/components.json", "components.json"
+      components = Chargify::Subscription.components(123)
+      components.first.allocated_quantity.should == 42
+      components.last.allocated_quantity.should == 2
+    end
+
+  end
+
+  describe '.find_component' do
+
+    it "should show a specific component" do
+      stub_get "https://OU812:x@pengwynn.chargify.com/subscriptions/123/components/16.json", "component.json"
+      component = Chargify::Subscription.find_component(123, 16)
+      component.name.should == "Extra Rubies"
+      component.allocated_quantity.should == 42
+    end
+
+  end
+
+  describe '.update_component' do
+
+    it "should update the allocated_quantity for a component" do
+      stub_put "https://OU812:x@pengwynn.chargify.com/subscriptions/123/components/16.json", "component.json"
+      response = Chargify::Subscription.update_component(123, 16, 20_000_000)
+      response.success?.should == true
+    end
+
+  end
+
+  describe '.component_usage' do
+
+    it "should list usage for a subscription" do
+      stub_get "https://OU812:x@pengwynn.chargify.com/subscriptions/123/components/456/usages.json", "list_metered_subscriptions.json", 200
+
+      subscription = Chargify::Subscription.component_usage(123, 456)
+      subscription.success?.should == true
+    end
 
   end
 
