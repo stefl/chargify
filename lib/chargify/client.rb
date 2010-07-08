@@ -32,18 +32,6 @@ module Chargify
       (response.subscription || {}).update(:success? => success)
     end
 
-    def list_products
-      products = get("/products.json")
-      products.map{|p| Hashie::Mash.new p['product']}
-    end
-
-    def product(product_id)
-      Hashie::Mash.new( get("/products/#{product_id}.json")).product
-    end
-
-    def product_by_handle(handle)
-      Hashie::Mash.new(get("/products/handle/#{handle}.json")).product
-    end
 
     def list_subscription_usage(subscription_id, component_id)
       raw_response = get("/subscriptions/#{subscription_id}/components/#{component_id}/usages.json")

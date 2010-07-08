@@ -34,23 +34,6 @@ describe Chargify do
       subscription.product.id.should == 354
     end
 
-    it "should return a list of products" do
-      stub_get "https://OU812:x@pengwynn.chargify.com/products.json", "products.json"
-      products = @client.list_products
-      products.first.accounting_code.should == 'TSMO'
-    end
-
-    it "should return info for a product" do
-      stub_get "https://OU812:x@pengwynn.chargify.com/products/8.json", "product.json"
-      product = @client.product(8)
-      product.accounting_code.should == 'TSMO'
-    end
-
-    it "should return info for a product by its handle" do
-      stub_get "https://OU812:x@pengwynn.chargify.com/products/handle/tweetsaver.json", "product.json"
-      product = @client.product_by_handle('tweetsaver')
-      product.accounting_code.should == 'TSMO'
-    end
 
     context "for quantity based components" do
       it "should list components" do

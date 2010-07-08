@@ -13,6 +13,7 @@ module Chargify
   autoload :Customer,     'chargify/customer'
   autoload :Error,        'chargify/error'
   autoload :Parser,       'chargify/parser'
+  autoload :Product,      'chargify/product'
   autoload :Subscription, 'chargify/subscription'
 
   class UnexpectedResponseError < RuntimeError; end
