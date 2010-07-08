@@ -4,7 +4,7 @@ Ruby wrapper for the chargify.com SAAS and billing API
 
 ## Installation
 
-    sudo gem install chargify
+    gem install chargify
     
 ## Example Usage
 
