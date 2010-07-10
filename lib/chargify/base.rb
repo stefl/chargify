@@ -15,6 +15,8 @@ module Chargify
 
         # This is to allow bang methods
         raise_errors = options.delete(:raise_errors)
+        
+        Chargify::Config.logger.debug("[CHARGIFY] Sending #{self.base_uri}#{path} a payload of #{options[:body]}")
 
         begin
           response = self.send(type.to_s, path, options)
@@ -36,6 +38,8 @@ module Chargify
             raise(Chargify::Error::GatewayTimeout.new(response), response.body)
           end
         end
+        
+        Chargify::Config.logger.debug("[CHARGIFY] Response from #{self.base_uri}#{path} was #{response.code}: #{response.body}")
 
         response
       end
@@ -48,11 +52,8 @@ module Chargify
       Chargify::Config.api_key = options[:api_key] if options[:api_key]
       Chargify::Config.subdomain = options[:subdomain] if options[:subdomain]
 
-
-
       @errors = []
       self.attributes = attrs
-
     end
 
     def attributes=(attrs)
@@ -64,6 +65,7 @@ module Chargify
     def api_request(type, path, options={})
       @errors = []
       begin
+        jsonify_body!(options)
         self.class.api_request(type, path, options)
       rescue Chargify::Error::Base => e
         if e.response.is_a?(Hash)
@@ -78,6 +80,12 @@ module Chargify
         raise
       end
     end
+    
+    protected
+    
+      def jsonify_body!(options)
+        options[:body] = options[:body].to_json if options[:body]
+      end
 
   end
 end
