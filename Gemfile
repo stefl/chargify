@@ -11,10 +11,9 @@ group :test do
   gem 'rake'
   gem 'bundler',  '~> 0.9.5'
   gem 'fakeweb',  '>= 1.2.5'
-  gem 'redgreen', '>= 1.2.2'
   gem 'mocha',    '~> 0.9.8'
-  gem 'rspec',                  :require => 'spec'
-  gem 'activesupport', '>= 2.3.5', :require => 'active_support'
+  gem 'rspec',                      :require => 'spec'
+  gem 'activesupport', '>= 2.3.5',  :require => 'active_support'
 end
 
 

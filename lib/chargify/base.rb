@@ -3,7 +3,6 @@ module Chargify
     include HTTParty
 
     parser Chargify::Parser
-    format :json
     headers 'Content-Type' => 'application/json'
     headers 'User-Agent' => 'Chargify Ruby Client'
 
@@ -16,7 +15,7 @@ module Chargify
         # This is to allow bang methods
         raise_errors = options.delete(:raise_errors)
         
-        Chargify::Config.logger.debug("[CHARGIFY] Sending #{self.base_uri}#{path} a payload of #{options[:body].to_json}")
+        Chargify::Config.logger.debug("[CHARGIFY] Sending #{self.base_uri}#{path} a payload of #{options[:body].to_json}") if Chargify::Config.debug
 
         begin
           response = self.send(type.to_s, path, options)
@@ -39,7 +38,7 @@ module Chargify
           end
         end
         
-        Chargify::Config.logger.debug("[CHARGIFY] Response from #{self.base_uri}#{path} was #{response.code}: #{response.body}")
+        Chargify::Config.logger.debug("[CHARGIFY] Response from #{self.base_uri}#{path} was #{response.code}: #{response.body}") if Chargify::Config.debug
 
         response
       end
