@@ -19,6 +19,11 @@ describe Chargify::Product do
       product = Chargify::Product.find(8)
       product.accounting_code.should == 'TSMO'
     end
+    
+    it "should return nil if the product does not exist for a product" do
+      stub_get "https://OU812:x@pengwynn.chargify.com/products/99.json", "", 404
+      Chargify::Product.find(99).should == nil
+    end
 
   end
 

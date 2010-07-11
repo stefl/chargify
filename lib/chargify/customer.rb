@@ -9,13 +9,18 @@ module Chargify
         customers.map{|c| Hashie::Mash.new c['customer']}
       end
 
-      def find(id)
+      def find!(id)
         return all if id == :all
 
         request = api_request(:get, "/customers/#{id}.json")
-        success = request.code == 200
-        response = Hashie::Mash.new(request).customer if success
-        Hashie::Mash.new(response || {}).update(:success? => success)
+        response = Hashie::Mash.new(request)
+        response
+      end
+      
+      def find(id)
+        find!(id)
+      rescue Chargify::Error::Base => e
+        return nil
       end
 
       # def find!(id)
@@ -23,11 +28,16 @@ module Chargify
         # response = Hashie::Mash.new(request).customer
       # end
 
-      def lookup(reference_id)
+      def lookup!(reference_id)
         request = api_request(:get, "/customers/lookup.json?reference=#{reference_id}")
-        success = request.code == 200
-        response = Hashie::Mash.new(request).customer if success
-        Hashie::Mash.new(response || {}).update(:success? => success)
+        response = Hashie::Mash.new(request)
+        response.customer
+      end
+      
+      def lookup(reference_id)
+        lookup!(reference_id)
+      rescue Chargify::Error::Base => e
+        return nil
       end
 
       #
@@ -37,12 +47,18 @@ module Chargify
       # * organization (Optional) Company/Organization name
       # * reference (Optional, but encouraged) The unique identifier used within your own application for this customer
       #
-      def create(info={})
+      def create!(info={})
         result = api_request(:post, "/customers.json", :body => {:customer => info})
         created = true if result.code == 201
         response = Hashie::Mash.new(result)
         (response.customer || response).update(:success? => created)
       end
+      
+      def create(info={})
+        create!(info)
+      rescue Chargify::Error::Base => e
+        return false
+      end
 
       #
       # * first_name (Required)
@@ -51,7 +67,7 @@ module Chargify
       # * organization (Optional) Company/Organization name
       # * reference (Optional, but encouraged) The unique identifier used within your own application for this customer
       #
-      def update(info={})
+      def update!(info={})
         info.stringify_keys!
         chargify_id = info.delete('id')
         result = api_request(:put, "/customers/#{chargify_id}.json", :body => {:customer => info})
@@ -59,6 +75,12 @@ module Chargify
         response = Hashie::Mash.new(result)
         return response.customer unless response.customer.to_a.empty?
         response
+      end
+      
+      def update(info={})
+        update!(info)
+      rescue Chargify::Error::Base => e
+        return false
       end
 
       def subscriptions(id)
