@@ -10,12 +10,15 @@ module Chargify
 
       def api_request(type, path, options={})
         self.base_uri "https://#{Chargify::Config.subdomain}.chargify.com"
-        self.basic_auth Chargify::Config.api_key, 'x'
 
         # This is to allow bang methods
         raise_errors = options.delete(:raise_errors)
         
-        Chargify::Config.logger.debug("[CHARGIFY] Sending #{self.base_uri}#{path} a payload of #{options[:body].to_json}") if Chargify::Config.debug
+        # Build options hash for HTTParty
+        options[:body] = options[:body].to_json if options[:body]
+        options[:basic_auth] = {:username => Chargify::Config.api_key, :password => 'x'}
+    
+        Chargify::Config.logger.debug("[CHARGIFY] Sending #{self.base_uri}#{path} a payload of #{options[:body]}") if Chargify::Config.debug
 
         begin
           response = self.send(type.to_s, path, options)
@@ -64,7 +67,7 @@ module Chargify
     def api_request(type, path, options={})
       @errors = []
       begin
-        self.class.api_request(type, path, jsonify_body!(options))
+        self.class.api_request(type, path, options)
       rescue Chargify::Error::Base => e
         if e.response.is_a?(Hash)
           if e.response.has_key?("errors")
@@ -78,13 +81,7 @@ module Chargify
         raise
       end
     end
-    
-    protected
-    
-      def jsonify_body!(options)
-        options[:body] = options[:body].to_json if options[:body]
-        options
-      end
+
 
   end
 end
