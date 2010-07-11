@@ -39,9 +39,9 @@ module Chargify
       #
       def create(info={})
         result = api_request(:post, "/customers.json", :body => {:customer => info})
+        created = true if result.code == 201
         response = Hashie::Mash.new(result)
-        return response.customer if response.customer
-        response
+        (response.customer || response).update(:success? => created)
       end
 
       #
