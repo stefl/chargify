@@ -101,7 +101,7 @@ describe Chargify::Subscription do
       }
       lambda {
         Chargify::Subscription.create(options)
-      }.should raise_error(Chargify::UnexpectedResponseError)
+      }.should raise_error(Chargify::Error::UnexpectedResponse)
     end
   end
 

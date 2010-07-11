@@ -17,6 +17,6 @@ module Chargify
 
   # TODO: migrate away from generic errors
   # Replace with Chargify::Errors
-  class UnexpectedResponseError < RuntimeError; end
+
 
 end

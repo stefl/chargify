@@ -5,7 +5,7 @@ module Chargify
       begin
         Crack::JSON.parse(body)
       rescue => e
-        raise UnexpectedResponseError, "Crack could not parse JSON. It said: #{e.message}. Chargify's raw response: #{body}"
+        raise(Chargify::Error::UnexpectedResponse.new(e.message), body)
       end
     end
 
