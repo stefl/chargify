@@ -26,14 +26,14 @@ module Chargify
         return false
       end
 
-      def update!(sub_id, subscription_attributes = {})
+      def update!(sub_id, subscription_attributes={})
         result = api_request(:put, "/subscriptions/#{sub_id}.json", :body => {:subscription => subscription_attributes})
         response = Hashie::Mash.new(result)
         response.subscription
       end
       
-      def update(sub_id, subscription_attributes = {})
-        update!(subscription_attributes)
+      def update(sub_id, subscription_attributes={})
+        update!(sub_id, subscription_attributes)
       rescue Chargify::Error::Base => e
         return false
       end

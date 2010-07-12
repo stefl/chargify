@@ -17,11 +17,20 @@ describe Chargify::Subscription do
       subscription.customer.reference.should == 'bradleyjoyce'
     end
 
-    it "should return nil if a subscription is not found" do
+    it "should throw a not found error if a subscription is not found" do
       stub_get "https://OU812:x@pengwynn.chargify.com/subscriptions/18.json", "subscription_not_found.json", 404
       lambda {
         Chargify::Subscription.find!(18)
       }.should raise_error(Chargify::Error::NotFound)
+    end
+
+  end
+  
+  describe '.find' do
+
+    it "should return nil if a subscription is not found" do
+      stub_get "https://OU812:x@pengwynn.chargify.com/subscriptions/18.json", "subscription_not_found.json", 404
+      Chargify::Subscription.find(18).should == nil
     end
 
   end
@@ -107,6 +116,25 @@ describe Chargify::Subscription do
         Chargify::Subscription.create!(options)
       }.should raise_error(Chargify::Error::UnexpectedResponse)
     end
+
+  end
+  
+  describe '.create' do
+    
+    it "should return false if creation errors out" do
+      stub_post "https://OU812:x@pengwynn.chargify.com/subscriptions.json", "subscription.json", 422
+      options = {
+        :product_handle     => 'monthly',
+        :customer_reference => 'bradleyjoyce',
+        :customer_attributes => {
+          :first_name   => "Wynn",
+          :last_name    => "Netherland",
+          :email        => "wynn@example.com"
+        }
+      }
+      Chargify::Subscription.create(options).should == false
+    end
+    
   end
 
   describe '.update!' do
@@ -159,13 +187,30 @@ describe Chargify::Subscription do
     end
 
   end
+  
+  describe '.update' do
+    
+    it "should return false if subscription update fails" do
+      stub_put "https://OU812:x@pengwynn.chargify.com/subscriptions/123.json", "subscription.json", 500
+      options = {
+        :product_handle     => 'monthly',
+        :customer_reference => 'bradleyjoyce',
+        :customer_attributes => {
+          :first_name   => "Wynn",
+          :last_name    => "Netherland",
+          :email        => "wynn@example.com"
+        }
+      }
+      Chargify::Subscription.update(123, options)
+    end
+    
+  end
 
   describe '.reactivate!' do
 
     it "should reactivate a subscription" do
       stub_put "https://OU812:x@pengwynn.chargify.com/subscriptions/123/reactivate.json", "subscription.json", 200
       subscription = Chargify::Subscription.reactivate!(123)
-
       subscription.state.should == "active"
     end
 
@@ -180,6 +225,15 @@ describe Chargify::Subscription do
       stub_put "https://OU812:x@pengwynn.chargify.com/subscriptions/123/reactivate.json", "subscription.json", 200
       subscription = Chargify::Subscription.reactivate!(123)
       subscription.should be_a(Hashie::Mash)
+    end
+
+  end
+  
+  describe '.reactivate' do
+
+    it "should return false if an error occurs" do
+      stub_put "https://OU812:x@pengwynn.chargify.com/subscriptions/123/reactivate.json", "subscription_not_found.json", 422
+      Chargify::Subscription.reactivate(123).should == false
     end
 
   end
@@ -200,7 +254,15 @@ describe Chargify::Subscription do
     end
 
   end
+  
+  describe '.cancel' do
+    
+    it "should return false if an error occurs" do
+      stub_delete "https://OU812:x@pengwynn.chargify.com/subscriptions/123.json", "deleted_subscription.json", 500
+      Chargify::Subscription.cancel(123).should == false
+    end
 
+  end
 
   describe '.charge!' do
 
@@ -244,15 +306,40 @@ describe Chargify::Subscription do
       end
 
   end
+  
+  describe '.charge' do
+
+    it "should return false if an error occurs" do
+      stub_post "https://OU812:x@pengwynn.chargify.com/subscriptions/123/charges.json", "charge_subscription_missing_parameters.json", 422
+      Chargify::Subscription.charge(123, {}).should == false
+    end
+
+  end
 
   describe '.migrate!' do
 
     it "should migrate a subscription from one product to another" do
       stub_post "https://OU812:x@pengwynn.chargify.com/subscriptions/123/migrations.json", "migrate_subscription.json"
 
-      subscription = Chargify::Subscription.migrate(123, 354);
+      subscription = Chargify::Subscription.migrate!(123, 354)
       subscription.should be_a(Hashie::Mash)
       subscription.product.id.should == 354
+    end
+    
+    it "should throw an error if one occurs" do
+      stub_post "https://OU812:x@pengwynn.chargify.com/subscriptions/123/migrations.json", "", 422
+      lambda {
+        Chargify::Subscription.migrate!(123, 354)
+      }.should raise_error(Chargify::Error::BadRequest)
+    end
+
+  end
+  
+  describe '.migrate' do
+
+    it "should return false if an error occurs" do
+      stub_post "https://OU812:x@pengwynn.chargify.com/subscriptions/123/migrations.json", "", 422
+      Chargify::Subscription.migrate(123, 354).should == false
     end
 
   end
@@ -266,6 +353,14 @@ describe Chargify::Subscription do
       components.last.allocated_quantity.should == 2
     end
 
+    it "should throw an error if one occurs"
+
+  end
+  
+  describe '.components' do
+    
+    it 'should return false if an error occurs'
+    
   end
 
   describe '.find_component!' do
@@ -277,6 +372,14 @@ describe Chargify::Subscription do
       component.allocated_quantity.should == 42
     end
 
+    it "should throw an error if one occurs"
+
+  end
+  
+  describe '.find_component!' do
+    
+    it 'should return false if an error occurs'
+    
   end
 
   describe '.update_component!' do
@@ -286,7 +389,15 @@ describe Chargify::Subscription do
       response = Chargify::Subscription.update_component!(123, 16, 20_000_000)
       response.should be_a(Hashie::Mash)
     end
+    
+    it "should throw an error if one occurs"
 
+  end
+
+  describe '.update_component' do
+    
+    it 'should return false if an error occurs'
+    
   end
 
   describe '.component_usage!' do
@@ -297,7 +408,15 @@ describe Chargify::Subscription do
       subscription = Chargify::Subscription.component_usage(123, 456)
       subscription.should be_a(Hashie::Mash)
     end
+    
+    it "should throw an error if one occurs"
 
+  end
+  
+  describe '.component_usage' do
+    
+    it 'should return false if an error occurs'
+    
   end
 
 end
