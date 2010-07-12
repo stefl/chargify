@@ -22,7 +22,7 @@ describe Chargify::Customer do
       customer.should be_a(Hashie::Mash)
     end
 
-    it "should return an empty Hash with success? set to false" do
+    it "should raise an error if nothing is found" do
       stub_get "https://OU812:x@pengwynn.chargify.com/customers/16.json", "", 404
       lambda {
         Chargify::Customer.find!(16)
@@ -30,17 +30,38 @@ describe Chargify::Customer do
     end
 
   end
+  
+  describe '.find' do
+
+    it "should return nil if nothing is found" do
+      stub_get "https://OU812:x@pengwynn.chargify.com/customers/16.json", "", 404
+      Chargify::Customer.find(16).should == nil
+    end
+
+  end
 
 
   describe '.lookup!' do
 
-    before do
-      stub_get "https://OU812:x@pengwynn.chargify.com/customers/lookup.json?reference=bradleyjoyce", "customer.json"
-    end
-
     it "should be able to be found by a <reference_id>" do
+      stub_get "https://OU812:x@pengwynn.chargify.com/customers/lookup.json?reference=bradleyjoyce", "customer.json"
       customer = Chargify::Customer.lookup!("bradleyjoyce")
       customer.should be_a(Hashie::Mash)
+    end
+
+    it "should raise an error if nothing is found" do
+      stub_get "https://OU812:x@pengwynn.chargify.com/customers/lookup.json?reference=bradleyjoyce", "", 404
+      lambda {
+        Chargify::Customer.lookup!("bradleyjoyce")
+      }.should raise_error(Chargify::Error::NotFound)
+    end
+
+  end
+  
+  describe '.lookup' do
+
+    it 'should return nil if nothing is found' do
+      Chargify::Customer.lookup("bradleyjoyce") == nil
     end
 
   end
@@ -63,11 +84,8 @@ describe Chargify::Customer do
 
   describe '.create!' do
 
-    before do
-      stub_post "https://OU812:x@pengwynn.chargify.com/customers.json", "new_customer.json"
-    end
-
     it "should create a new customer" do
+      stub_post "https://OU812:x@pengwynn.chargify.com/customers.json", "new_customer.json"
       info = {
         :first_name   => "Wynn",
         :last_name    => "Netherland",
@@ -76,16 +94,29 @@ describe Chargify::Customer do
       customer = Chargify::Customer.create!(info)
       customer.first_name.should == "Wynn"
     end
+    
+    it "should raise an error if customer creation fails" do
+      stub_post "https://OU812:x@pengwynn.chargify.com/customers.json", "", 422
+      lambda {
+        Chargify::Customer.create!
+      }.should raise_error(Chargify::Error::BadRequest)
+    end
 
+  end
+  
+  describe '.create' do
+    
+    it "should return false if creation fails" do
+      stub_post "https://OU812:x@pengwynn.chargify.com/customers.json", "", 422
+      Chargify::Customer.create.should == false
+    end
+    
   end
 
   describe '.update!' do
 
-    before do
-      stub_put "https://OU812:x@pengwynn.chargify.com/customers/16.json", "new_customer.json"
-    end
-
     it "should update a customer" do
+      stub_put "https://OU812:x@pengwynn.chargify.com/customers/16.json", "new_customer.json"
       info = {
         :id           => 16,
         :first_name   => "Wynn",
@@ -95,7 +126,23 @@ describe Chargify::Customer do
       customer = Chargify::Customer.update!(info)
       customer.first_name.should == "Wynn"
     end
+    
+    it "should raise an error if the customer cannot be found" do
+      stub_put "https://OU812:x@pengwynn.chargify.com/customers/16.json", "", 404
+      lambda {
+        Chargify::Customer.update!(:id => 16)
+      }.should raise_error(Chargify::Error::NotFound)
+    end
 
+  end
+  
+  describe '.update' do
+    
+    it "should return false if the customer cannot be found" do
+      stub_put "https://OU812:x@pengwynn.chargify.com/customers/16.json", "", 404
+      Chargify::Customer.update(:id => 16).should == false
+    end
+    
   end
 
   describe '.subscriptions' do
