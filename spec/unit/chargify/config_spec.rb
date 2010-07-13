@@ -19,7 +19,8 @@ describe Chargify::Config do
     end
 
     it "should default to RAILS_DEFAULT_LOGGER if defined" do
-      RAILS_DEFAULT_LOGGER = "something"
+      pending
+      Rails.logger = "something"
       Chargify::Config.reset
       Chargify::Config.logger.should == "something"
     end

@@ -10,7 +10,7 @@ module Chargify
 
       def defaults
         {
-          :logger     => defined?(RAILS_DEFAULT_LOGGER) ? RAILS_DEFAULT_LOGGER : Logger.new(STDOUT),
+          :logger     => defined?(Rails.logger) ? Rails.logger : Logger.new(STDOUT),
           :debug      => false,
           :subdomain  => "your-site-name",
           :api_key    => "your-api-key"

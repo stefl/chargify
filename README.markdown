@@ -1,14 +1,18 @@
-# chargify
+# jsmestad-chargify
 
-Ruby wrapper for the chargify.com SAAS and billing API
+Ruby wrapper for the Chargify SAAS and billing API
 
 ### Important Notice
 
-This fork breaks all compatibility with previous versions (<= 0.2.6)
+This fork breaks all compatibility with previous versions (< 0.3.0)
 
 ## Installation
 
-    gem install chargify
+### Production Version
+    gem install jsmestad-chargify
+    
+### Bleeding Edge
+    gem install jsmestad-chargify --pre
     
 ## Example Usage
 
@@ -32,6 +36,10 @@ This fork breaks all compatibility with previous versions (<= 0.2.6)
     $ cd chargify
     $ bundle install
     $ bundle exec rake
+    
+## More Info
+
+Wiki: http://wiki.github.com/jsmestad/chargify/
 
 ### Copyright
 
