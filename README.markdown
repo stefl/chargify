@@ -30,7 +30,7 @@ This fork breaks all compatibility with previous versions (< 0.3.0)
       config[:api_key]   = 'InDhcXAAAAAg7juDD'
     end
 
-## Contributing (requires Bundler >= 0.9.7):
+## Contributing (requires Bundler >= 0.9.26):
 
     $ git clone git://github.com/jsmestad/chargify.git
     $ cd chargify

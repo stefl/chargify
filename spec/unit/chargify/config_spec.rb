@@ -107,7 +107,7 @@ describe Chargify::Config do
     end
 
     it "should let you set items on the configuration object as a hash" do
-      lambda{
+      lambda {
         Chargify::Config.setup do |c|
           c[:bananas] = 100
         end
@@ -115,7 +115,7 @@ describe Chargify::Config do
     end
 
     it "should let you set items on the configuration object as a method" do
-      lambda{
+      lambda {
         Chargify::Config.setup do |c|
           c.monkeys = 100
         end
@@ -135,7 +135,7 @@ describe Chargify::Config do
     end
 
     it "should set the value of the config item matching the method name if it's an assignment" do
-      lambda{
+      lambda {
         Chargify::Config.trees = 3
       }.should change(Chargify::Config, :trees).from(nil).to(3)
     end
