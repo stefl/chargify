@@ -74,7 +74,7 @@ module Chargify
       #
       def method_missing(method, *args)
         if method.to_s[-1,1] == '='
-          configuration[method.to_s.tr('=','').to_sym] = *args
+          configuration.send(:[]=, method.to_s.tr('=','').to_sym, *args) 
         else
           configuration[method]
         end
