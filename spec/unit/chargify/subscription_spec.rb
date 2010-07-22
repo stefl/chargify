@@ -9,6 +9,16 @@ describe Chargify::Subscription do
     end
   end
 
+  describe '.all' do
+
+    it "should return a list of products" do
+      stub_get "https://OU812:x@pengwynn.chargify.com/subscriptions.json", "subscriptions.json"
+      subscription = Chargify::Subscription.all
+      subscription.first.customer.reference.should == 'bradleyjoyce'
+    end
+
+  end
+
   describe '.find!' do
 
     it "should return info for a subscription" do

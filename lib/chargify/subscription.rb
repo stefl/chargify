@@ -3,7 +3,14 @@ module Chargify
 
     class << self
 
+      def all
+        result = api_request(:get, "/subscriptions.json")
+        result.map{|p| Hashie::Mash.new p['subscription']}
+      end
+
       def find!(id)
+        return all if id == :all
+
         result = api_request(:get, "/subscriptions/#{id}.json")
         Hashie::Mash.new(result).subscription
       end
