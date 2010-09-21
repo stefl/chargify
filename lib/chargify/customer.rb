@@ -61,7 +61,7 @@ module Chargify
       end
       
       def find_or_create(info={})
-        symbolize_keys!(info)
+        info.symbolize_keys!
         self.create!(info)
       rescue Chargify::Error::BadRequest => e
         self.lookup!(info[:reference])

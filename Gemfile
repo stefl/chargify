@@ -4,6 +4,8 @@ group :runtime do
   gem 'httparty', '~> 0.6.1'
   gem 'hashie', '~> 0.1.8'
   gem 'json'
+  gem 'activesupport', '~> 3.0.0',  :require => 'active_support/all'
+  gem 'i18n'
 end
 
 group :test do
@@ -12,7 +14,7 @@ group :test do
   gem 'fakeweb',  '>= 1.2.5'
   gem 'mocha',    '~> 0.9.8'
   gem 'rspec',    '~> 2.0.0.beta.22'
-  gem 'activesupport', '~> 3.0.0',  :require => 'active_support'
+
   gem 'autotest'
 end
 

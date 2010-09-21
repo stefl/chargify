@@ -115,7 +115,15 @@ describe Chargify::Customer do
   
   describe '.find_or_create' do
     it "should create a user" do
-
+      stub_post "https://OU812:x@pengwynn.chargify.com/customers.json", "new_customer.json"
+      info = {
+        :first_name   => "Wynn",
+        :last_name    => "Netherland",
+        :email        => "wynn@example.com",
+        :reference    => "wynn@example.com"
+      }
+      Chargify::Customer.should_receive(:create!)
+      Chargify::Customer.find_or_create(info)
     end
     
     it "should supress BadRequest error and lookup" do
@@ -126,11 +134,8 @@ describe Chargify::Customer do
         :email        => "wynn@example.com",
         :reference    => "wynn@example.com"
       }
-      
-      Chargify::Customer.should_receive(:lookup)
-      lambda {
-        Chargify::Customer.find_or_create(info)
-      }.should_not raise_error(Chargify::Error::BadRequest)
+      Chargify::Customer.should_receive(:lookup!)
+      Chargify::Customer.find_or_create(info)
     end
 
   end
