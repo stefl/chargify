@@ -1,6 +1,7 @@
 require 'hashie'
 require 'httparty'
 require 'json'
+require 'active_support/core_ext/hash'
 
 Hash.send :include, Hashie::HashExtensions
 
