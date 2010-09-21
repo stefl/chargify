@@ -62,9 +62,9 @@ module Chargify
       
       def find_or_create(info={})
         info.symbolize_keys!
-        self.create!(info)
-      rescue Chargify::Error::BadRequest => e
         self.lookup!(info[:reference])
+      rescue Chargify::Error::NotFound => e
+        self.create!(info)
       end
 
       #
