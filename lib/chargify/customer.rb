@@ -59,6 +59,13 @@ module Chargify
       rescue Chargify::Error::Base => e
         return false
       end
+      
+      def find_or_create(info={})
+        symbolize_keys!(info)
+        self.create!(info)
+      rescue Chargify::Error::BadRequest => e
+        self.lookup!(info[:reference])
+      end
 
       #
       # * first_name (Required)
