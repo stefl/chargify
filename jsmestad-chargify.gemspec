@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{jsmestad-chargify}
-  s.version = "0.3.2.2"
+  s.version = "0.3.3.pre"
 
-  s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
+  s.required_rubygems_version = Gem::Requirement.new("> 1.3.1") if s.respond_to? :required_rubygems_version=
   s.authors = ["Wynn Netherland", "Justin Smestad"]
-  s.date = %q{2010-09-21}
+  s.date = %q{2010-10-02}
   s.email = %q{justin.smestad@gmail.com}
   s.extra_rdoc_files = [
     "LICENSE",
@@ -33,6 +33,7 @@ Gem::Specification.new do |s|
      "lib/chargify/error.rb",
      "lib/chargify/parser.rb",
      "lib/chargify/product.rb",
+     "lib/chargify/product_family.rb",
      "lib/chargify/subscription.rb",
      "lib/chargify/transaction.rb",
      "spec/fixtures/charge_subscription.json",

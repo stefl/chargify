@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.3 October 01, 2010
+* ProductFamily support (.find, .all, .find_by_handle, .components)
+
+## 0.3.2 September 2010
+* Support for Customer.find_or_create method
+
 ## 0.3.0.pre July 08, 2010
 * Complete API Rewrite, please view wiki for API documentation
 
