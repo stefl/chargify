@@ -5,9 +5,9 @@
 
 Gem::Specification.new do |s|
   s.name = %q{jsmestad-chargify}
-  s.version = "0.3.3.pre"
+  s.version = "0.3.3"
 
-  s.required_rubygems_version = Gem::Requirement.new("> 1.3.1") if s.respond_to? :required_rubygems_version=
+  s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Wynn Netherland", "Justin Smestad"]
   s.date = %q{2010-10-02}
   s.email = %q{justin.smestad@gmail.com}
