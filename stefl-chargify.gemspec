@@ -25,7 +25,6 @@ Gem::Specification.new do |s|
      "Rakefile",
      "VERSION",
      "changelog.md",
-     "jsmestad-chargify.gemspec",
      "lib/chargify.rb",
      "lib/chargify/base.rb",
      "lib/chargify/config.rb",
@@ -59,7 +58,8 @@ Gem::Specification.new do |s|
      "spec/unit/chargify/parser_spec.rb",
      "spec/unit/chargify/product_spec.rb",
      "spec/unit/chargify/subscription_spec.rb",
-     "spec/unit/chargify/transaction_spec.rb"
+     "spec/unit/chargify/transaction_spec.rb",
+     "stefl-chargify.gemspec"
   ]
   s.homepage = %q{http://github.com/stefl/chargify}
   s.rdoc_options = ["--charset=UTF-8"]
