@@ -2,7 +2,7 @@ source 'http://rubygems.org'
 
 group :runtime do
   gem 'httparty', '~> 0.6.1'
-  gem 'hashie', '~> 0.1.8'
+  gem 'hashie', '~> 0.4.0'
   gem 'json'
   gem 'activesupport', '~> 3.0.0'
   gem 'i18n'
