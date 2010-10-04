@@ -3,10 +3,10 @@ require 'rake'
 begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
-    gem.name = "jsmestad-chargify"
+    gem.name = "stefl-chargify"
     gem.summary = %Q{Ruby wrapper for the Chargify API}
     gem.email = "justin.smestad@gmail.com"
-    gem.homepage = "http://github.com/jsmestad/chargify"
+    gem.homepage = "http://github.com/stefl/chargify"
     gem.authors = ["Wynn Netherland", "Justin Smestad"]
 
     gem.add_dependency('httparty', '~> 0.6.1')
