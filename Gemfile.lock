@@ -38,14 +38,14 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  activesupport (~> 3.0.0)
+  activesupport (>= 3.0.0)
   autotest
   fakeweb (>= 1.3.0)
-  hashie (~> 0.4.0)
-  httparty (~> 0.6.1)
+  hashie (>= 0.4.0)
+  httparty (>= 0.6.1)
   i18n
   jeweler
   json
-  mocha (~> 0.9.8)
+  mocha (>= 0.9.8)
   rake
-  rspec (~> 2.0.0.beta.22)
+  rspec (>= 2.0.0.beta.22)
