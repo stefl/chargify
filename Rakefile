@@ -9,8 +9,8 @@ begin
     gem.homepage = "http://github.com/stefl/chargify"
     gem.authors = ["Wynn Netherland", "Justin Smestad"]
 
-    gem.add_dependency('httparty', '~> 0.6.1')
-    gem.add_dependency('hashie', '~> 0.4.0')
+    gem.add_dependency('httparty', '>= 0.6.1')
+    gem.add_dependency('hashie', '>= 0.4.0')
     gem.add_dependency('json')
     gem.add_dependency('activesupport', '>= 3.0.0')
   end
