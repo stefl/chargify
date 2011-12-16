@@ -3,7 +3,7 @@ module Chargify
 
     def parse
       begin
-        Crack::JSON.parse(body)
+        JSON.parse(body)
       rescue => e
         raise(Chargify::Error::UnexpectedResponse.new(e.message), body)
       end
