@@ -4,7 +4,7 @@ module Chargify
     def parse
       begin
         puts body
-        Crack::JSON.parse(body)
+        ::Crack::JSON.parse(body)
       rescue => e
         puts e.message
         puts e.backtrace
