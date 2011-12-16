@@ -1,6 +1,7 @@
 source 'http://rubygems.org'
 
 group :runtime do
+  gem 'crack'
   gem 'httparty', '>= 0.6.1'
   gem 'hashie', '>= 0.4.0'
   gem 'json'
