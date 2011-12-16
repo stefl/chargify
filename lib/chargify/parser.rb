@@ -1,3 +1,5 @@
+require 'crack'
+
 module Chargify
   class Parser < HTTParty::Parser
 
