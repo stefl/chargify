@@ -7,6 +7,7 @@ module Chargify
         Crack::JSON.parse(body)
       rescue => e
         puts e.message
+        puts e.backtrace
         raise(Chargify::Error::UnexpectedResponse.new(e.message), body)
       end
     end
